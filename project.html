@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- 谷歌分析脚本 -->
+  <!-- 谷歌分析脚本待更新 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XEN8DSJX72"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-XEN8DSJX72');
+  </script>
+  <script src="./assets/vendor/sql/sql-wasm.js"></script>
+  <script src="./assets/js/db/db.js"></script>
+  <script src="./assets/js/db/project.js"></script>
+
+  <meta charset="utf-8">
+  <!-- 设置视口，使页面在不同设备上自适应屏幕宽度，初始缩放比例为1.0 -->
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <!-- 页面标题 -->
+  <title>开源项目</title>
+  <!-- 页面描述 -->
+  <meta content="" name="description">
+  <!-- 页面关键词 -->
+  <meta content="" name="keywords">
+  <!-- 网站图标 -->
+  <link href="assets/img/logo/logo.jpeg" rel="icon">
+  <link href="assets/img/logo/logo.jpeg" rel="apple-touch-icon">
+
+  <!-- 引入谷歌字体 -->
+  <link
+          href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800"
+          rel="stylesheet">
+
+  <!-- 引入 css 文件 -->
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/committee.css" rel="stylesheet">
+  <link href="assets/css/project.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <script src="assets/js/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+<header id="header" class="d-flex align-items-center">
+  <div class="container-fluid container-xxl d-flex align-items-center">
+
+    <!-- 网站 logo -->
+    <div id="logo" class="me-auto row">
+      <a href="index.html" class="scrollto"><img src="assets/img/logo/logo-1.png" alt="" title=""></a>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav id="navbar" class="navbar order-last order-lg-0">
+      <ul>
+        <li><a class="nav-link scrollto" href="index.html">首页</a></li>
+        <li><a class="nav-link scrollto" href="activity_category.html">学术活动</a></li>
+        <li><a class="nav-link scrollto active" href="project.html">开源项目</a></li>
+        <li><a class="nav-link scrollto" href="committee.html">社区成员</a></li>
+        <li><a class="nav-link scrollto" href="#footer">联系我们</a></li>
+      </ul>
+      <!-- 移动端导航切换图标 -->
+      <i class="bi bi-list mobile-nav-toggle"></i>
+    </nav>
+
+  </div>
+</header>
+
+<main id="main">
+
+  <section id="project" class="section-with-bg">
+    <div class="container">
+      <div id="project-title" class="section-header" data-aos="fade-up">
+        <p>Open Source Projects</p>
+        <h2>开源项目</h2>
+<!--        <p id="project-title-tip">（按照姓名排序）</p>-->
+      </div>
+
+      <div id="project-container" class="section team">
+        <div class="tab-content container row justify-content-center aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+          <div role="tabpanel" class="col-lg-12 tab-pane fade show active">
+            <div id="project-container-data" class="row schedule-item" data-aos="fade-up" >
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+</main>
+
+<script>
+  // 页面加载完成后执行获取数据的操作
+  window.onload = async function () {
+    await initProjects();
+  };
+
+  /**
+   * 初始化开源项目信息。
+   */
+  async function initProjects() {
+    try {
+      const result = await findAllProjects();
+
+      let html_str_list = [];
+
+      for (let i = 0; i < result.length; i++) {
+        project = result[i];
+        console.log(project)
+        html_str_list.push(`
+          <div class="col-lg-5 col-md-5 d-flex align-items-stretch schedule-card">
+            <a class="project aos-init aos-animate" target="_blank" href="${project.html_url}">
+              <div class="row">
+                <div class="col-auto">
+                  <i class="bi bi-github bi-github-info"></i>
+                </div>
+                <div class="project-info col">
+                  <h4 class="project-name">${project.title}</h4>
+                  <span class="project-description">${project.description}</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        `);
+      }
+
+      if (result.length % 2 !== 0) {
+        html_str_list.push(`
+          <div class="col-lg-5 col-md-5 d-flex align-items-stretch schedule-card schedule-card-add">
+          </div>
+        `);
+      }
+
+      html_str_list.push(`</div></div></div>`);
+
+      const html_str = html_str_list.join('');
+      $("#project-container-data").html(html_str);
+
+    } catch (error) {
+      console.error('Error fetching seminar data:', error);
+    }
+  }
+
+</script>
+
+
+<footer id="footer">
+  <div class="footer-top">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-3 col-md-4 footer-info">
+          <img src="assets/img/logo/logo-footnote.png" alt="MLNLP">
+          <p>
+            MLNLP社区的愿景是促进国内外自然语言处理，机器学习学术界、产业界和广大爱好者之间的交流和进步，特别是初学者同学们的进步。</p>
+        </div>
+
+        <div class="col-lg-2 col-md-4 footer-wechat">
+          <h4>微信公众号</h4>
+          <img src="assets/img/qrcode/wechat.jpg" alt="MLNLP_wechat">
+        </div>
+
+        <div class="col-lg-2 col-md-4 footer-wechat">
+          <h4>Github</h4>
+          <img src="assets/img/qrcode/github.png" alt="MLNLP_wechat">
+        </div>
+
+        <div class="col-lg-2 col-md-4 footer-wechat">
+          <h4>Bilibili</h4>
+          <img src="assets/img/qrcode/bilibili.png" alt="MLNLP_wechat">
+        </div>
+
+        <div class="col-lg-2 col-md-6 footer-contact">
+          <h4>联系我们</h4>
+          <p>
+            <strong>邮箱:</strong><a href="mailto:contact@mlnlp2023.com"
+                                     style="color: #ffffff;">mlnlp2021@163.com</a><br>
+          </p>
+
+          <div class="social-links">
+            <a href="https://mp.weixin.qq.com/s/mRXbfm4aJQb0FMB6YQy1QQ" class="wechat"
+               target="_blank"><i class="bi bi-wechat"></i></a>
+            <a href="https://github.com/MLNLP-World" class="github" target="_blank"><i
+                    class="bi bi-github"></i></a>
+            <a href="https://space.bilibili.com/168887299" class="bilibili" target="_blank"><i><img
+                    src="assets/img/logo/bilibili-fill.svg" alt="Bootstrap" width="20"
+                    height="20"></i></a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="copyright">
+      &copy; Copyright <strong>TheEvent</strong>. Modified by <strong>MLNLP</strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+  </div>
+</footer>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="assets/vendor/aos/aos.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

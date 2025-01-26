@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- 谷歌分析脚本 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XEN8DSJX72"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag("js", new Date());
+
+        gtag("config", "G-XEN8DSJX72");
+    </script>
+    <script src="./assets/vendor/sql/sql-wasm.js"></script>
+    <script src="./assets/js/db/db.js"></script>
+    <script src="./assets/js/db/activity.js"></script>
+
+    <meta charset="utf-8">
+    <!-- 设置视口，使页面在不同设备上自适应屏幕宽度，初始缩放比例为1.0 -->
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- 页面标题 -->
+    <title>学术活动</title>
+    <!-- 页面描述 -->
+    <meta content="" name="description">
+    <!-- 页面关键词 -->
+    <meta content="" name="keywords">
+    <!-- 网站图标 -->
+    <link href="assets/img/logo/logo.jpeg" rel="icon">
+    <link href="assets/img/logo/logo.jpeg" rel="apple-touch-icon">
+
+    <!-- 引入谷歌字体 -->
+    <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800"
+            rel="stylesheet">
+
+    <!-- 引入 css 文件 -->
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="assets/css/activity.css" rel="stylesheet">
+    <link href="assets/css/activity_category.css" rel="stylesheet">
+
+
+    <!-- Template Main CSS File -->
+    <link href="assets/css/style.css" rel="stylesheet">
+    <script src="assets/js/jquery.min.js"></script>
+</head>
+
+<body>
+
+<!-- ==================== 网站头 ==================== -->
+<header id="header" class="d-flex align-items-center">
+    <div class="container-fluid container-xxl d-flex align-items-center">
+
+        <!-- 网站 logo -->
+        <div id="logo" class="me-auto row">
+            <a href="index.html" class="scrollto"><img src="assets/img/logo/logo-1.png" alt="" title=""></a>
+        </div>
+
+        <!-- 导航栏 -->
+        <nav id="navbar" class="navbar order-last order-lg-0">
+            <ul>
+                <li><a class="nav-link scrollto" href="index.html">首页</a></li>
+                <li><a class="nav-link scrollto active" href="#">学术活动</a></li>
+                <li><a class="nav-link scrollto" href="project.html">开源项目</a></li>
+                <li><a class="nav-link scrollto" href="committee.html">社区成员</a></li>
+                <li><a class="nav-link scrollto" href="#footer">联系我们</a></li>
+            </ul>
+            <!-- 移动端导航切换图标 -->
+            <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+        <!-- 注册按钮 -->
+        <!--        <a class="buy-tickets scrollto" href="https://bscc2011.mikecrm.com/BZTCX5g" target="_blank">注册</a>-->
+
+    </div>
+</header>
+
+<!-- ==================== 网站内容 ==================== -->
+
+<main id="main">
+
+    <!-- ======= 画廊 ======= -->
+    <div id="activity-category-gallery">
+        <div id="slides-container"></div>
+        <div class="controls">
+            <button class="prev-arrow" onclick="prevSlide()">&#10094;</button>
+            <button class="next-arrow" onclick="nextSlide()">&#10095;</button>
+        </div>
+        <div class="dots-container">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+            <span class="dot" onclick="currentSlide(4)"></span>
+            <span class="dot" onclick="currentSlide(5)"></span>
+        </div>
+    </div>
+
+    <!-- ======= 列表 ======= -->
+    <section id="schedule" class="section-with-bg">
+        <div id="activity-content" class="container" data-aos="fade-up">
+            <div class="col">
+
+                <div class="row justify-content-center" data-aos="fade-up">
+                    <div class="col-lg-11 tab-pane agenda-opening" align="center">
+                        <div id="activity-category-title">
+                            <p>Previous Events</p>
+                            <h2>往期活动</h2>
+                        </div>
+                        <div id="activity-category"></div>
+                        <div id="pagination" data-aos="fade-up"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        // 页面加载完成后执行获取数据的操作
+        window.onload = async function () {
+            // 获取 page
+            let page
+            const params = new URLSearchParams(window.location.search);
+            if (params.has("page")) {
+                page = params.get("page");
+            } else {
+                page = 1;
+            }
+
+            const totalPages = await getTotalPages();
+            await initSlides();
+            await loadPage(totalPages, page);
+        };
+
+        /**
+         * 刷新活动信息列表。
+         * @param totalPages 页面总数。
+         * @param currentPage 当前页码。
+         */
+        async function loadPage(totalPages, currentPage) {
+            // 发起请求获取活动数据
+            try {
+                // 发起请求获取活动数据
+                const result = await findActivitiesByPage(currentPage, 5);
+                const activities = result.activities;
+                const guestList = result.guestList;
+
+                let html_str = "";
+                for (let i = 0; i < activities.length; i++) {
+                    const activity = activities[i];
+                    const guests = guestList[i];
+
+                    // 格式化时间
+                    const time = new Date(activity.time);
+                    const year = time.getFullYear();
+                    const month = String(time.getMonth() + 1).padStart(2, "0");
+                    const day = String(time.getDate()).padStart(2, "0");
+
+                    // 获取嘉宾列表
+                    let guest = '';
+                    if (guests != null) {
+                        let guestsStr = [];
+                        for (let j = 0; j < guests.length; j++) {
+                            const segment = guests[j];
+                            const organization = segment.organization
+                                .replaceAll("(", "〔").replaceAll(")", "〕")
+                                .replaceAll("（", "〔").replaceAll("）", "〕");
+                            const guest_str = `${segment.name}（${organization}）`;
+                            guestsStr.push(guest_str);
+                        }
+                        guest = guestsStr.join("、");
+                    }
+
+                    // 去除活动描述中的 <b> 与 <br> 标签，并将其包裹在 <p> 标签之中
+                    activity.description = activity.description
+                        .replaceAll("<b>", "").replaceAll("</b>", "").replaceAll("<br>", "</p><p>");
+                    activity.description = "<p>" + activity.description + "</p>";
+
+                    // 构建 HTML 字符串
+                    html_str += `
+                <div class="row activity-category-box" data-aos="fade-up">
+                    <a href="${activity.html_url}" class="col-12 col-md-5 activity-category-cover-box">
+                        <img loading="lazy" src="${activity.cover_url}" alt="">
+                    </a>
+                    <div class="col-12 col-md-7 activity-category-info">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-9">
+                                    <a href="${activity.html_url}">
+                                        <h2 class="activity-category-data-title">${activity.title}</h2>
+                                    </a>
+                                </div>
+                                <div class="col-3 activity-category-date">
+                                    <p class="activity-category-data-year">${year}</p>
+                                    <p class="activity-category-data-day">${month}/${day}</p>
+                                </div>
+                            </div>
+                            <div class="guest-container">
+                                <p class="activity-category-guest"><b>嘉宾：</b></p>
+                                <p class="activity-category-data-guests">${guest}</p>
+                            </div>
+                            <div class="activity-category-data-description">${activity.description}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                }
+
+                // 将生成的 HTML 字符串插入到页面中
+                $("#activity-category").html(html_str);
+
+                // 生成分页
+                generatePagination(totalPages, currentPage);
+            } catch (error) {
+                console.error("Error fetching activity data:", error);
+            }
+        }
+
+        /**
+         * 生成页码栏。
+         * @param totalPages 页面总数。
+         * @param currentPage 当前页码。
+         */
+        function generatePagination(totalPages, currentPage) {
+            // 计算页码范围
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+
+            let page_html_str = "";
+
+            // 添加上一页按钮
+            page_html_str += `
+                <a class="page-prev" href="#schedule" onclick="loadPage(${totalPages}, ${currentPage > 1 ? currentPage - 1 : 1})">◀</a>
+            `;
+            // 添加首页页码按钮与省略号
+            if (startPage > 1) {
+                page_html_str += `
+                    <a class="page-digit" href="#schedule" onclick="loadPage(${totalPages}, 1)">1</a>
+                `;
+                if (startPage > 2) {
+                    page_html_str += "<span>...</span>";
+                }
+            }
+            // 添加中间页码按钮
+            for (let i = startPage; i <= endPage; i++) {
+                const activeClass = i === currentPage ? " active" : "";
+                page_html_str += `
+                    <a class="page-digit${activeClass}" href="#schedule" onclick="loadPage(${totalPages}, ${i})">${i}</a>
+                `;
+            }
+            // 添加末页页码按钮与省略号
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    page_html_str += "<span>...</span>";
+                }
+                page_html_str += `
+                    <a class="page-digit" href="#schedule" onclick="loadPage(${totalPages}, ${totalPages})">${totalPages}</a>
+                `;
+            }
+            // 添加下一页按钮
+            page_html_str += `
+                <a class="page-next" href="#schedule" onclick="loadPage(${totalPages}, ${currentPage < totalPages ? currentPage + 1 : totalPages})">▶</a>
+            `;
+
+            $("#pagination").html(page_html_str);
+        }
+
+        /**
+         * 获取页面总数。
+         * @returns {Promise<number>} 页面总数。
+         */
+        async function getTotalPages() {
+            try {
+                const count = await findActivityCount();
+                return Math.ceil(count / 5);
+            } catch (error) {
+                console.error("Error fetching total pages:", error);
+            }
+        }
+
+        let slideIndex = 1;
+
+        /**
+         * 初始化活动播片。
+         */
+        async function initSlides() {
+            try {
+                // 发起请求获取活动数据
+                const result = await findActivitiesByPage(1, 5);
+                const activities = result.activities;
+
+                let html_str = "";
+                for (let i = 0; i < activities.length; i++) {
+                    const activity = activities[i];
+
+                    html_str += `
+                <a href="${activity.html_url}">
+                    <img src="${activity.cover_url}" alt="" class="slide">
+                </a>
+            `;
+                }
+
+                // 将生成的 HTML 字符串插入到页面中
+                $("#slides-container").html(html_str);
+
+                // 延迟 100ms 后执行轮播相关操作
+                setTimeout(() => {
+                    showSlides(1); // 显示第一页的幻灯片
+                    startAutoSlide(); // 开始自动轮播
+
+                    // 鼠标悬停时停止轮播，离开时恢复轮播
+                    const gallery = document.getElementById("activity-category-gallery");
+                    gallery.addEventListener("mouseover", stopAutoSlide);
+                    gallery.addEventListener("mouseout", startAutoSlide);
+                }, 100);
+            } catch (error) {
+                console.error("Error fetching activity data:", error);
+            }
+        }
+
+        /**
+         * 在画廊中展示指定的图片。
+         * @param n 图片的编号。
+         */
+        function showSlides(n) {
+            let slides = document.getElementsByClassName("slide");
+            let dots = document.getElementsByClassName("dot");
+
+            // 更新索引
+            if (n > slides.length) {
+                slideIndex = 1;
+            }
+            if (n < 1) {
+                slideIndex = slides.length;
+            }
+
+            // 隐藏所有图片
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.opacity = 0;
+                slides[i].classList.remove("active");
+                dots[i].classList.remove("active");
+            }
+
+            // 显示当前图片
+            slides[slideIndex - 1].style.opacity = 1;
+            slides[slideIndex - 1].classList.add("active");
+            dots[slideIndex - 1].classList.add("active");
+
+            // 更新指示点
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active-dot", "");
+            }
+            dots[slideIndex - 1].className += " active-dot";
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function prevSlide() {
+            showSlides(slideIndex -= 1);
+        }
+
+        function nextSlide() {
+            showSlides(slideIndex += 1);
+        }
+
+        // 自动轮播
+        let autoSlideInterval;
+
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(nextSlide, 3800); // 每3.8秒自动切换到下一张
+        }
+
+        function stopAutoSlide() {
+            clearInterval(autoSlideInterval);
+        }
+
+    </script>
+
+    <footer id="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-3 col-md-4 footer-info">
+                        <img src="assets/img/logo/logo-footnote.png" alt="MLNLP">
+                        <p>
+                            MLNLP社区的愿景是促进国内外自然语言处理，机器学习学术界、产业界和广大爱好者之间的交流和进步，特别是初学者同学们的进步。</p>
+                    </div>
+
+                    <div class="col-lg-2 col-md-4 footer-wechat">
+                        <h4>微信公众号</h4>
+                        <img src="assets/img/qrcode/wechat.jpg" alt="MLNLP_wechat">
+                    </div>
+
+                    <div class="col-lg-2 col-md-4 footer-wechat">
+                        <h4>Github</h4>
+                        <img src="assets/img/qrcode/github.png" alt="MLNLP_wechat">
+                    </div>
+
+                    <div class="col-lg-2 col-md-4 footer-wechat">
+                        <h4>Bilibili</h4>
+                        <img src="assets/img/qrcode/bilibili.png" alt="MLNLP_wechat">
+                    </div>
+
+                    <div class="col-lg-2 col-md-6 footer-contact">
+                        <h4>联系我们</h4>
+                        <p>
+                            <strong>邮箱:</strong><a href="mailto:contact@mlnlp2023.com"
+                                                     style="color: #ffffff;">mlnlp2021@163.com</a><br>
+                        </p>
+
+                        <div class="social-links">
+                            <a href="https://mp.weixin.qq.com/s/mRXbfm4aJQb0FMB6YQy1QQ" class="wechat"
+                               target="_blank"><i class="bi bi-wechat"></i></a>
+                            <a href="https://github.com/MLNLP-World" class="github" target="_blank"><i
+                                    class="bi bi-github"></i></a>
+                            <a href="https://space.bilibili.com/168887299" class="bilibili" target="_blank"><i><img
+                                    src="assets/img/logo/bilibili-fill.svg" alt="Bootstrap" width="20"
+                                    height="20"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="copyright">
+                &copy; Copyright <strong>TheEvent</strong>. Modified by <strong>MLNLP</strong>. All Rights Reserved
+            </div>
+            <div class="credits">
+                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="assets/vendor/aos/aos.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="assets/vendor/php-email-form/validate.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="assets/js/main.js"></script>
+
+</main>
+</body>
+
+</html>

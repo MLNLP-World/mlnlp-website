@@ -1,0 +1,274 @@
+#activity-category-gallery {
+    width: 100%;
+    max-height: 100vh;
+    position: relative;
+}
+
+#slides-container {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+#slides-container::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+    pointer-events: none;
+}
+
+
+.slide {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    pointer-events: none;
+}
+
+.slide.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.prev-arrow, .next-arrow {
+    background-color: rgba(0, 0, 0, 0.27);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.dots-container {
+    position: absolute;
+    bottom: 30px;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+}
+
+.dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 10px;
+    background-color: rgba(187, 187, 187, 0.27);
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 1.5s ease;
+}
+
+.active-dot {
+    background-color: #4869df;
+}
+
+#activity-content {
+    margin-top: 150px;
+}
+
+
+#activity-category-title {
+    padding-bottom: 40px;
+    margin: 0 auto 120px auto;
+    border-bottom: 1px solid #000;
+}
+
+#activity-category-title p {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+#activity-category-title .activity-category-title-overlay {
+    position: absolute;
+    z-index: -1;
+    top: 80px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #000;
+    opacity: 0.15;
+    font-size: 50px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+#activity-category-title h2 {
+    width: 230px;
+    font-size: 50px;
+    font-weight: 800;
+    text-align: justify;
+    text-align-last: justify;
+    text-justify: inter-word;
+}
+
+.activity-category-box {
+    margin-bottom: 90px;
+}
+
+.activity-category-cover-box {
+    padding: 0;
+    overflow: hidden;
+}
+
+.activity-category-cover-box img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: auto;
+    transition: transform ease 1s, box-shadow ease 1s;
+    position: relative;
+}
+
+.activity-category-cover-box:hover img {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
+}
+
+.activity-category-info {
+    padding-left: 40px;
+}
+
+@media (max-width: 767px) {
+    .activity-category-box {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .activity-category-info {
+        max-width: 100vw;
+        padding-left: 0;
+        margin-top: 20px;
+    }
+}
+
+.activity-category-data-title {
+    width: 100%;
+    height: auto;
+    padding: 6px 25px 7px 20px;
+    margin-left: 3px;
+    font-size: 32px;
+    font-weight: 600;
+    text-align: left;
+    color: black;
+    border-left: 4px solid #4869df;
+    transition: color ease-in-out 0.3s;
+}
+
+.activity-category-data-title:hover {
+    color: #4869de;
+}
+
+.activity-category-date {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.activity-category-data-year {
+    writing-mode: vertical-rl;
+    font-size: 12px;
+    font-weight: 300;
+    text-align: right;
+    transform: rotate(180deg); /* 旋转180度，使文字从上到下排列 */
+    display: inline-block;
+}
+
+.activity-category-data-day {
+    margin-left: 2px;
+    font-size: 34px;
+    font-weight: 300;
+    text-align: left;
+}
+
+.guest-container {
+    margin-bottom: 18px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+
+.activity-category-guest {
+    margin: 0;
+    white-space: nowrap;
+    width: auto;
+    text-align: right;
+    padding-right: 8px;
+    font-weight: bold;
+}
+
+.activity-category-data-guests {
+    margin: 0;
+    flex-grow: 1;
+    text-align: left;
+}
+
+.activity-category-data-description {
+    line-height: 1.8;
+    text-align: left;
+}
+
+.activity-category-data-description p {
+    margin-bottom: 8px;
+}
+
+#pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    margin: 10px auto 60px;
+}
+
+#pagination a, #pagination span {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    color: #555;
+    font-size: 18px;
+    text-decoration: none;
+    border-radius: 50%;
+    transition: background-color 0.5s, border-color 0.5s, color 0.5s;
+}
+
+#pagination .page-digit:hover {
+    background-color: #4869df; /* 鼠标悬停时的背景色 */
+    color: white;
+}
+
+#pagination a.active {
+    background-color: #4869df; /* 选中时的背景色 */
+    color: white; /* 选中时的文字颜色 */
+}
+
+#pagination span {
+    color: #888;
+    cursor: default;
+    border: none; /* 省略号无边框 */
+    background-color: transparent; /* 省略号透明背景 */
+}

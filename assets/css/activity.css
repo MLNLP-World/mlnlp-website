@@ -1,0 +1,134 @@
+#full-height {
+    height: 100vh !important;
+    width: 100vw !important;
+}
+
+#activity-bg {
+    width: 99vw;
+    aspect-ratio: 50 / 13; /* 宽高比固定为 10 : 3 */
+    position: absolute;
+    overflow: hidden;
+}
+
+#activity-bg img {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 水平、竖直居中 */
+    filter: brightness(50%) blur(20px); /* 图片变暗、变模糊 */
+}
+
+#activity-info {
+    margin-top: 6.5vw;
+}
+
+#activity-content .section-header {
+    padding-bottom: 50px;
+    margin-bottom: 40px;
+}
+
+#activity-content .section-header h2 {
+    height: 3.5vw;
+    font-size: 2.5vw;
+    color: #fff;
+}
+
+#activity-content .section-header p {
+    height: 4.5vw;
+    font-size: 1vw;
+    font-weight: 300;
+    color: #fff;
+}
+
+#activity-data-cover {
+    width: 48vw;
+    display: block;
+    margin: 0 auto 40px auto;
+    transition: transform ease 1s, box-shadow ease 1s;
+    position: relative;
+}
+
+#activity-data-cover:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
+}
+
+#activity-data-bilibili {
+    width: 5vw;
+    display: block;
+    margin: auto;
+}
+
+.agenda-description-box{
+    margin: 0 auto;
+}
+
+#activity-description{
+    margin: 60px auto 30px;
+    padding: 35px 35px;
+    border-radius: 10px;
+    background: #fafafa;
+    transition: background-color ease-in-out 0.3s, box-shadow ease-in-out 0.3s;
+}
+
+#activity-description p{
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+#activity-description p b {
+    background-image: linear-gradient(45deg, #09009f, #4869df);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#activity-description:hover{
+    background-color: #fff;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.02);
+}
+
+.segment-1 {
+    text-align: center;
+}
+
+.segment-1-layout{
+    background: #fafafa;
+    border: 1px solid transparent;
+    position: relative;
+    border-radius: 10px;
+    padding: 20px 32px !important;
+    transition: background-color ease-in-out 0.3s, box-shadow ease-in-out 0.3s;
+}
+
+.segment-1-layout:hover{
+    background-color: #fff;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.02);
+}
+
+.segment-1-layout h4{
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.segment-1-layout img {
+    max-width: 150px;
+    height: auto;
+    padding: 0;
+    margin: 0 auto 12px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.segment-1-layout .segment-time{
+    margin: 7px auto 25px;
+    color: #5c636a;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.segment-1-layout .segment-cover{
+    margin: 0 auto;
+}

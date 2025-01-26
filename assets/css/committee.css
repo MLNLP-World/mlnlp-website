@@ -1,0 +1,40 @@
+.committee-container-bottom {
+    margin-bottom: 80px;
+}
+
+#committee-former-container {
+    margin-bottom: 150px;
+}
+
+#committee-title, #committee-former-title {
+    padding-bottom: 60px;
+    margin: 100px auto 60px auto;
+}
+
+#committee-title.committee-html {
+    margin-top: 150px;
+}
+
+#committee-title p, #committee-former-title p {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+#committee-title h2, #committee-former-title h2 {
+    width: 230px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 50px;
+    font-weight: 800;
+    text-align: justify;
+    text-align-last: justify;
+    text-justify: inter-word;
+}
+
+#committee-title #committee-title-tip, #committee-former-title #committee-former-title-tip {
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+}
+
