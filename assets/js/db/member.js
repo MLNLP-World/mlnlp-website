@@ -1,8 +1,8 @@
 async function findMembersByGroup() {
     const membersList = [];
 
-    const maxTermResult = await execute('select count(*) from dict_member_term');
-    const maxTerm = maxTermResult[0]["count(*)"];
+    const maxTermResult = await execute('select max(term_id) from dict_member_term');
+    const maxTerm = maxTermResult[0]["max(term_id)"];
 
     const maxRoleResult = await execute('select count(*) from dict_member_role');
     const maxRole = maxRoleResult[0]["count(*)"];
@@ -12,7 +12,9 @@ async function findMembersByGroup() {
 
         for (let j = maxTerm; j > 0; j--) {
             const members = await findMembersByRoleAndByTerm(i, j);
-            membersByRoleList.push(members);
+            if (members != null) {
+                membersByRoleList.push(members);
+            }
         }
 
         membersList.push(membersByRoleList);
