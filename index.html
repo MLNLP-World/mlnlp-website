@@ -464,9 +464,9 @@
 
                         <div class="project-meta">
                             <div class="project-badges">
-                                <span class="project-badge project-badge--stars">
+                                <span class="project-badge project-badge--stars" data-home-stars-repo="${project.github_repo}">
                                     <i class="bi bi-star-fill" aria-hidden="true"></i>
-                                    <span>${formatCount(project.stars)}</span>
+                                    <span data-home-stars-count>${formatCount(project.stars)}</span>
                                 </span>
                                 <span class="project-badge project-badge--forks" data-home-forks-repo="${project.github_repo}">
                                     <i class="bi bi-diagram-2-fill" aria-hidden="true"></i>
@@ -487,19 +487,39 @@
     }
 
     function hydrateHomeProjectForks(formatCount) {
+        // 实时从 GitHub 公开 API 拉取 star / fork（同一次请求同时拿到，纯前端、跨平台通用）。
+        // localStorage + 1 小时 TTL 缓存以缓解限流；失败/限流时保留数据库兜底值。
+        const TTL = 60 * 60 * 1000;
         document.querySelectorAll("[data-home-forks-repo]").forEach(async (badge) => {
             const repo = badge.getAttribute("data-home-forks-repo");
-            const count = badge.querySelector("[data-home-forks-count]");
+            const forkEl = badge.querySelector("[data-home-forks-count]");
+            const card = badge.closest(".home-project-card");
+            const starEl = card ? card.querySelector("[data-home-stars-count]") : null;
 
-            if (!repo || !count) {
+            if (!repo) {
                 return;
             }
 
-            const cacheKey = `mlnlp:home:forks:${repo}`;
-            const cachedValue = window.sessionStorage.getItem(cacheKey);
-            if (cachedValue) {
-                count.textContent = cachedValue;
-                return;
+            const apply = (stars, forks) => {
+                if (starEl && stars !== undefined && stars !== null) {
+                    starEl.textContent = formatCount(stars);
+                }
+                if (forkEl && forks !== undefined && forks !== null) {
+                    forkEl.textContent = formatCount(forks);
+                }
+            };
+
+            try {
+                const raw = window.localStorage.getItem(`mlnlp:gh:${repo}`);
+                if (raw) {
+                    const cached = JSON.parse(raw);
+                    if (cached && (Date.now() - cached.ts) < TTL) {
+                        apply(cached.stars, cached.forks);
+                        return;
+                    }
+                }
+            } catch (error) {
+                // 忽略缓存读取异常
             }
 
             try {
@@ -509,11 +529,18 @@
                 }
 
                 const data = await response.json();
-                const formattedCount = formatCount(data.forks_count);
-                window.sessionStorage.setItem(cacheKey, formattedCount);
-                count.textContent = formattedCount;
+                apply(data.stargazers_count, data.forks_count);
+                try {
+                    window.localStorage.setItem(`mlnlp:gh:${repo}`, JSON.stringify({
+                        stars: data.stargazers_count,
+                        forks: data.forks_count,
+                        ts: Date.now()
+                    }));
+                } catch (error) {
+                    // 忽略缓存写入异常
+                }
             } catch (error) {
-                // Keep the fallback value when GitHub is unavailable or rate-limited.
+                // GitHub 不可达或被限流时，保留兜底值
             }
         });
     }

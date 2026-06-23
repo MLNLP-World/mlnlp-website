@@ -59,35 +59,63 @@
     }
 
     function hydrateForks() {
-        const forkBadges = document.querySelectorAll("[data-forks-repo]");
+        // 实时从 GitHub 公开 API 拉取 star / fork（同一次请求同时拿到两者，纯前端、不依赖任何后端，
+        // 任何静态托管平台都通用）。用 localStorage + 1 小时 TTL 缓存，降低未登录 API 60 次/小时限流的影响；
+        // 拉取失败/被限流时，保留数据库里的兜底值。
+        const TTL = 60 * 60 * 1000;
+        const badges = document.querySelectorAll("[data-forks-repo]");
 
-        forkBadges.forEach(async (badge) => {
+        badges.forEach(async (badge) => {
             const repo = badge.getAttribute("data-forks-repo");
-            const count = badge.querySelector("[data-forks-count]");
+            const forkEl = badge.querySelector("[data-forks-count]");
+            const card = badge.closest(".project-card");
+            const starEl = card ? card.querySelector("[data-stars-count]") : null;
 
-            if (!repo || !count) {
+            if (!repo) {
                 return;
             }
 
-            const cacheKey = `mlnlp:forks:${repo}`;
-            const cachedValue = window.sessionStorage.getItem(cacheKey);
-            if (cachedValue) {
-                count.textContent = cachedValue;
-                return;
+            const apply = (stars, forks) => {
+                if (starEl && stars !== undefined && stars !== null) {
+                    starEl.textContent = formatCount(stars);
+                }
+                if (forkEl && forks !== undefined && forks !== null) {
+                    forkEl.textContent = formatCount(forks);
+                }
+            };
+
+            try {
+                const raw = window.localStorage.getItem(`mlnlp:gh:${repo}`);
+                if (raw) {
+                    const cached = JSON.parse(raw);
+                    if (cached && (Date.now() - cached.ts) < TTL) {
+                        apply(cached.stars, cached.forks);
+                        return;
+                    }
+                }
+            } catch (error) {
+                // 忽略缓存读取异常
             }
 
             try {
                 const response = await fetch(`https://api.github.com/repos/${repo}`);
                 if (!response.ok) {
-                    return;
+                    return; // 限流/失败：保留数据库兜底值
                 }
 
                 const data = await response.json();
-                const formattedCount = formatCount(data.forks_count);
-                window.sessionStorage.setItem(cacheKey, formattedCount);
-                count.textContent = formattedCount;
+                apply(data.stargazers_count, data.forks_count);
+                try {
+                    window.localStorage.setItem(`mlnlp:gh:${repo}`, JSON.stringify({
+                        stars: data.stargazers_count,
+                        forks: data.forks_count,
+                        ts: Date.now()
+                    }));
+                } catch (error) {
+                    // 忽略缓存写入异常
+                }
             } catch (error) {
-                // Leave the fallback value when GitHub is unavailable or rate-limited.
+                // GitHub 不可达或被限流时，保留兜底值
             }
         });
     }
