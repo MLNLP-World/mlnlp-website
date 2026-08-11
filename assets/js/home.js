@@ -10,7 +10,7 @@
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     function initReveal() {
-        const sections = document.querySelectorAll("#gallery, #home-projects, #committee, .home-project-card, .home-member-group, .home-member-grid .member");
+        const sections = document.querySelectorAll("#gallery, #home-projects, #committee, .home-project-card");
 
         if (reduceMotion.matches || !("IntersectionObserver" in window)) {
             sections.forEach((section) => section.classList.add("is-visible"));
@@ -32,13 +32,9 @@
         });
 
         sections.forEach((section, index) => {
-            if (section.classList.contains("home-project-card") || section.classList.contains("member")) {
+            if (section.classList.contains("home-project-card")) {
                 section.setAttribute("data-home-reveal", "");
                 section.style.setProperty("--home-reveal-delay", `${(index % 8) * 60}ms`);
-            }
-
-            if (section.classList.contains("home-member-group")) {
-                section.setAttribute("data-home-reveal", "");
             }
 
             observer.observe(section);

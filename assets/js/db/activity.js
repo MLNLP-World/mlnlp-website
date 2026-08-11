@@ -1,3 +1,14 @@
+function withActivityAssetVersion(activity) {
+    if (Number(activity?.type) === 2 && Number(activity?.type_id) === 41) {
+        return {
+            ...activity,
+            cover_url: `${activity.cover_url}?v=20260721-seminar-41-hd`
+        };
+    }
+
+    return activity;
+}
+
 async function findActivity(type, typeId) {
     // 查询活动信息
     const activityQuery = `
@@ -7,7 +18,7 @@ async function findActivity(type, typeId) {
           and type_id = ${typeId};
     `;
     const activityResult = await execute(activityQuery);
-    const activity = activityResult[0]
+    const activity = withActivityAssetVersion(activityResult[0]);
 
     // 查询活动环节信息
     const activitySegmentQuery = `
@@ -37,7 +48,10 @@ async function findActivitiesByPage(page, size, type){
         order by time desc
         limit ${size} offset ${offset};
     `;
-    const activities = await execute(ActivityQuery);
+    const activityRows = await execute(ActivityQuery);
+    const activities = activityRows == null
+        ? null
+        : activityRows.map(withActivityAssetVersion);
 
     const guestList = []
     if (activities != null) {

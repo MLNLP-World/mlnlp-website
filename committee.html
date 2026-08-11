@@ -16,8 +16,8 @@
         gtag('config', 'G-XEN8DSJX72');
     </script>
     <script src="./assets/vendor/sql/sql-wasm.js"></script>
-    <script src="./assets/js/db/db.js?v=20260621-fix15"></script>
-    <script src="./assets/js/db/member.js?v=20260621-fix15"></script>
+    <script src="./assets/js/db/db.js?v=20260720-talk-77-cover"></script>
+    <script src="./assets/js/db/member.js?v=20260721-member-profiles-v8"></script>
 
     <meta charset="utf-8">
     <!-- 设置视口，使页面在不同设备上自适应屏幕宽度，初始缩放比例为1.0 -->
@@ -46,8 +46,8 @@
     <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
-    <link href="assets/css/style.css?v=20260621-fix15" rel="stylesheet">
-    <link href="assets/css/committee.css?v=20260621-fix15" rel="stylesheet">
+    <link href="assets/css/style.css?v=20260629-logo-left" rel="stylesheet">
+    <link href="assets/css/committee.css?v=20260721-member-status" rel="stylesheet">
     <script src="assets/js/jquery.min.js?v=20260621-fix15"></script>
 </head>
 
@@ -58,8 +58,11 @@
     <div class="container-fluid container-xxl d-flex align-items-center">
 
         <!-- 网站 logo -->
-        <div id="logo" class="me-auto row">
-            <a href="index.html" class="scrollto"><img src="assets/img/logo/logo-1.png" alt="" title=""></a>
+        <div id="logo" class="me-auto site-brand">
+            <a href="index.html" aria-label="MLNLP 社区首页">
+                <img src="assets/img/logo/logo.jpeg" alt="MLNLP">
+                <span>MLNLP</span>
+            </a>
         </div>
 
         <!-- 导航栏 -->
@@ -77,9 +80,9 @@
                 <li class="nav-dropdown"><a class="nav-link scrollto" href="project.html">开源项目</a>
                     <ul class="nav-dropdown-menu">
                         <li><a href="project.html?cat=全部">全部</a></li>
+                        <li><a href="project.html?cat=论文写作">论文写作</a></li>
                         <li><a href="project.html?cat=课程笔记">课程笔记</a></li>
                         <li><a href="project.html?cat=实用工具">实用工具</a></li>
-                        <li><a href="project.html?cat=论文写作">论文写作</a></li>
                     </ul>
                 </li>
                 <li><a class="nav-link scrollto active" href="#">社区成员</a></li>
@@ -110,67 +113,221 @@
             <div id="committee-container" class="section team">
             </div>
 
-            <div class="committee-former-entry">
-                <p class="committee-former-entry-tip">浏览 MLNLP 社区全部委员与秘书处成员（含历届）</p>
-                <a class="committee-former-link" href="committee-history.html">
-                    浏览全部成员
-                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                </a>
+            <div id="committee-former-title" class="section-header committee-html committee-hero">
+                <p class="committee-eyebrow">Former Members</p>
+                <h2>历任成员</h2>
+                <p class="committee-subtitle">感谢历届成员在社区建设、学术活动组织与开源协作中的持续投入。</p>
+                <span class="sort-pill">按照届次与姓名排序</span>
             </div>
+
+            <div id="committee-former-container" class="section team">
+            </div>
+
         </div>
 
     </section>
 </main>
 
 <script>
+    const STUDENT_EXECUTIVE_COMMITTEE = [
+        { name: "涂耿", title: "组长" },
+        { name: "王奕辰", title: "副组长" },
+        { name: "蒋官语", title: "副组长" },
+        { name: "张宸源", title: "副组长" },
+        { name: "余青臣", title: "副组长" },
+        { name: "乔硕斐", title: "副组长" },
+        { name: "范静如", title: "副组长" },
+        { name: "包启明", title: "副组长" }
+    ];
+
+    const ACADEMIC_MEMBER_STATUS = {
+        "蒋理": "国家级青年人才",
+        "潘亮铭": "国家级青年人才",
+        "田倬韬": "国家级青年人才",
+        "王金鹏": "国家级青年人才",
+        "王文杰": "国家级青年人才",
+        "刘东瑞": "青年科学家",
+        "潘玲": "微软学者",
+        "张林峰": "微软学者",
+        "张倬胜": "中国中文信息学会优博",
+        "冯夏冲": "博士后研究员",
+        "陈冲": "华为云高级研究员",
+        "刘乾": "Member of Technical Staff",
+        "林禹臣": "Member of Technical Staff",
+        "庞天宇": "Principal Scientist",
+        "任意": "Foundation Video Model Lead",
+        "王亚庆": "Research Scientist",
+        "李北": "研究员",
+        "矣晓沅": "高级研究员"
+    };
+
+    const ACADEMIC_MEMBER_STATUS_HIDDEN_NAMES = new Set(["赵健安"]);
+    const ACADEMIC_MEMBER_STATUS_HIDDEN_ORGANIZATIONS = new Set([
+        "xAI",
+        "腾讯",
+        "HeyGen",
+        "谷歌DeepMind",
+        "华为",
+        "微软亚洲研究院"
+    ]);
+
+    function getAcademicMemberStatus(member) {
+        if (member.role !== "学术委员" || ACADEMIC_MEMBER_STATUS_HIDDEN_NAMES.has(member.name)) {
+            return "";
+        }
+
+        if (ACADEMIC_MEMBER_STATUS[member.name]) {
+            return ACADEMIC_MEMBER_STATUS[member.name];
+        }
+
+        return ACADEMIC_MEMBER_STATUS_HIDDEN_ORGANIZATIONS.has(member.organization)
+            ? ""
+            : "博士生导师";
+    }
+
+    function findStudentExecutiveMembers(members) {
+        const memberByName = new Map(members.map((member) => [member.name, member]));
+        const byPinyin = (a, b) => a.pinyin.localeCompare(b.pinyin);
+
+        return STUDENT_EXECUTIVE_COMMITTEE
+            .map((executive) => {
+                const member = memberByName.get(executive.name);
+                return member ? { ...member, executiveTitle: executive.title } : null;
+            })
+            .filter(Boolean)
+            .sort((a, b) => {
+                if (a.executiveTitle === "组长") {
+                    return -1;
+                }
+
+                if (b.executiveTitle === "组长") {
+                    return 1;
+                }
+
+                return byPinyin(a, b);
+            });
+    }
+
+    function renderMemberCard(member) {
+        const avatarClass = getAvatarClass(member.avatar_url);
+        const academicStatus = getAcademicMemberStatus(member);
+        return `
+                        <div class="schedule-card">
+                            <a class="member" target="_blank" href="${member.homepage_url}">
+                                <div class="avatar-wrapper">
+                                    <div class="avatar-inner speaker">
+                                        <img loading="lazy" src="${member.avatar_url}" alt="${member.name}" class="${avatarClass}">
+                                    </div>
+                                </div>
+                                <div class="member-info">
+                                    <h4>${member.name}${member.executiveTitle ? `（${member.executiveTitle}）` : ""}</h4>
+                                    ${academicStatus ? `<span class="member-status">${academicStatus}</span>` : ""}
+                                    <span>${member.organization}</span>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+    }
+
+    function renderMemberGrid(members) {
+        return `
+                    <div class="member-grid schedule-item">
+                        ${members.map(renderMemberCard).join("")}
+                    </div>
+                `;
+    }
+
+    function getAvatarClass(avatarUrl) {
+        const filename = (avatarUrl || "")
+            .split("/")
+            .pop()
+            .split(".")[0]
+            .replace(/[^a-zA-Z0-9_-]/g, "");
+
+        return filename ? `avatar-${filename}` : "";
+    }
+
+    function renderStudentMembers(members) {
+        const executives = findStudentExecutiveMembers(members);
+        const executiveNames = new Set(executives.map((member) => member.name));
+        const otherMembers = members.filter((member) => !executiveNames.has(member.name));
+        const leader = executives.find((member) => member.executiveTitle === "组长");
+        const deputies = executives.filter((member) => member.executiveTitle !== "组长");
+        const html = [];
+
+        if (executives.length) {
+            html.push(`<h3 class="member-subtitle">执委会</h3>`);
+            if (leader) {
+                html.push(`<div class="member-grid member-grid--leader schedule-item">${renderMemberCard(leader)}</div>`);
+            }
+            if (deputies.length) {
+                html.push(renderMemberGrid(deputies));
+            }
+        }
+
+        if (otherMembers.length) {
+            html.push(`<h3 class="member-subtitle">学生委员</h3>`);
+            html.push(renderMemberGrid(otherMembers));
+        }
+
+        return html.join("");
+    }
+
     // 页面加载完成后执行获取数据的操作
     window.onload = async function () {
         await initCommittee();
     };
+
+    function getGroupTitle(members) {
+        return members[0].role === "学术委员" && members[0].term === "首届 · 2021-2023"
+            ? "创始学术委员"
+            : members[0].role;
+    }
+
+    function renderMemberGroups(result) {
+        const htmlList = [];
+
+        for (let i = 0; i < result.length; i++) {
+            const membersList = result[i];
+
+            htmlList.push(`
+                <section class="member-group">
+            `);
+
+            for (let j = 0; j < membersList.length; j++) {
+                const members = membersList[j];
+
+                htmlList.push(`
+                    <h2 class="team-chair">${getGroupTitle(members)}</h2>
+                    <h2 class="team-term">（${members[0].term}）</h2>
+                `);
+
+                if (members[0].role === "学生委员") {
+                    htmlList.push(renderStudentMembers(members));
+                } else {
+                    htmlList.push(renderMemberGrid(members));
+                }
+            }
+
+            htmlList.push(`</section>`);
+        }
+
+        return htmlList.join("");
+    }
 
     /**
      * 初始化社区成员信息
      */
     async function initCommittee() {
         try {
-            // 发起请求获取 seminar 数据
-            const result = await findMembersByGroup();
+            const [currentMembers, formerMembers] = await Promise.all([
+                findCurrentMembersByGroup(),
+                findFormerMembersByGroup()
+            ]);
 
-            let html_str_list = [];
-
-            for (let i = 0; i < result.length; i++) {
-                const members = result[i][0];
-
-                html_str_list.push(`
-                <section class="member-group">
-                    <h2 class="team-chair">${members[0].role}</h2>
-                    <h2 class="team-term">（${members[0].term}）</h2>
-                    <div class="member-grid schedule-item">
-            `);
-
-                for (const member of members) {
-                    html_str_list.push(`
-                    <div class="schedule-card">
-                        <a class="member" target="_blank" href="${member.homepage_url}">
-                            <div class="avatar-wrapper">
-                                <div class="avatar-inner speaker">
-                                    <img loading="lazy" src="${member.avatar_url}" alt="${member.name}">
-                                </div>
-                            </div>
-                            <div class="member-info">
-                                <h4>${member.name}</h4>
-                                <span>${member.organization}</span>
-                            </div>
-                        </a>
-                    </div>
-                `);
-                }
-
-                html_str_list.push(`</div></section>`);
-            }
-
-            const html_str = html_str_list.join('');
-            $("#committee-container").html(html_str);
+            $("#committee-container").html(renderMemberGroups(currentMembers.map((members) => [members])));
+            $("#committee-former-container").html(renderMemberGroups(formerMembers));
+            window.dispatchEvent(new Event("mlnlp:committee-members-rendered"));
         } catch (error) {
             console.error('Error fetching seminar data:', error);
         }
@@ -194,7 +351,7 @@
                 </div>
 
                 <div class="col-lg-2 col-md-4 footer-wechat">
-                    <h4>Github</h4>
+                    <h4>GitHub</h4>
                     <img src="assets/img/qrcode/github.png" alt="MLNLP_wechat">
                 </div>
 
@@ -230,16 +387,13 @@
             &copy; Copyright <strong>TheEvent</strong>. Modified by <strong>MLNLP</strong>. All Rights Reserved
         </div>
         <div class="credits site-maintainers">
-            网站建设与维护（排名不分先后）：上海交通大学 范静如 · 新西兰奥克兰大学 包启明 · 中南大学 周璟轩
+            网站建设与维护（排名不分先后）：上海交通大学 范静如 · 新西兰奥克兰大学 包启明 · 中南大学 周璟轩 · 澳门科技大学 王鹏
         </div>
         <div class="credits">
             Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
         </div>
     </div>
 </footer>
-
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-        class="bi bi-arrow-up-short"></i></a>
 
 <!-- Vendor JS Files -->
 <script src="assets/vendor/aos/aos.js"></script>
@@ -250,7 +404,7 @@
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js?v=20260621-fix15"></script>
-<script src="assets/js/committee.js?v=20260621-fix15"></script>
+<script src="assets/js/committee.js?v=20260622-committee-initial-members"></script>
 
 </body>
 

@@ -17,8 +17,8 @@
     gtag('config', 'G-XEN8DSJX72');
   </script>
   <script src="./assets/vendor/sql/sql-wasm.js"></script>
-  <script src="./assets/js/db/db.js?v=20260621-fix15"></script>
-  <script src="./assets/js/db/project.js?v=20260621-fix15"></script>
+  <script src="./assets/js/db/db.js?v=20260720-talk-77-cover"></script>
+  <script src="./assets/js/db/project.js?v=20260721-rebuttal-description"></script>
 
   <meta charset="utf-8">
   <!-- 设置视口，使页面在不同设备上自适应屏幕宽度，初始缩放比例为1.0 -->
@@ -45,8 +45,8 @@
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-  <link href="assets/css/style.css?v=20260621-fix15" rel="stylesheet">
-  <link href="assets/css/project.css?v=20260621-fix15" rel="stylesheet">
+  <link href="assets/css/style.css?v=20260629-logo-left" rel="stylesheet">
+  <link href="assets/css/project.css?v=20260629-project-section-label" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   <script src="assets/js/jquery.min.js?v=20260621-fix15"></script>
@@ -59,8 +59,11 @@
   <div class="container-fluid container-xxl d-flex align-items-center">
 
     <!-- 网站 logo -->
-    <div id="logo" class="me-auto row">
-      <a href="index.html" class="scrollto"><img src="assets/img/logo/logo-1.png" alt="" title=""></a>
+    <div id="logo" class="me-auto site-brand">
+      <a href="index.html" aria-label="MLNLP 社区首页">
+        <img src="assets/img/logo/logo.jpeg" alt="MLNLP">
+        <span>MLNLP</span>
+      </a>
     </div>
 
     <!-- 导航栏 -->
@@ -78,9 +81,9 @@
         <li class="nav-dropdown"><a class="nav-link scrollto active" href="project.html">开源项目</a>
                     <ul class="nav-dropdown-menu">
                         <li><a href="project.html?cat=全部">全部</a></li>
+                        <li><a href="project.html?cat=论文写作">论文写作</a></li>
                         <li><a href="project.html?cat=课程笔记">课程笔记</a></li>
                         <li><a href="project.html?cat=实用工具">实用工具</a></li>
-                        <li><a href="project.html?cat=论文写作">论文写作</a></li>
                     </ul>
                 </li>
         <li><a class="nav-link scrollto" href="committee.html">社区成员</a></li>
@@ -133,18 +136,17 @@
     'MLNLP-World/Top-AI-Conferences-Paper-with-Code': '实用工具',
     'MLNLP-World/Paper-Picture-Writing-Code': '论文写作',
     'MLNLP-World/Paper-Writing-Tips': '论文写作',
+    'MLNLP-World/Paper-Rebuttal-Tips': '论文写作',
     'MLNLP-World/gpu-watchdog': '实用工具',
     'MLNLP-World/Overleaf-Bib-Helper': '实用工具',
     'MLNLP-World/Academic-Resume-Template': '论文写作',
-    'MLNLP-World/Awesome-LLM': '实用工具',
     'MLNLP-World/LLMBeginner': '课程笔记',
     'MLNLP-World/minimind-notes': '课程笔记',
     'MLNLP-World/Reinforcement-Learning-Comic-Notes': '课程笔记',
     'MLNLP-World/reasoning-from-scratch-CN': '课程笔记',
-    'MLNLP-World/MachineLearning2025Spring--Notes': '课程笔记',
-    'MLNLP-World/Top-Conference-WeChat-Group': '论文写作'
+    'MLNLP-World/MachineLearning2025Spring--Notes': '课程笔记'
   };
-  const PROJECT_CATEGORIES = ['全部', '课程笔记', '实用工具', '论文写作'];
+  const PROJECT_CATEGORIES = ['全部', '论文写作', '课程笔记', '实用工具'];
 
   function categoryOf(project) {
     return PROJECT_CATEGORY[project.github_repo] || '其他';
@@ -156,9 +158,9 @@
     if (btn) {
       btn.classList.add('active');
     }
-    document.querySelectorAll('#project-container-data .project-card').forEach((card) => {
-      const show = category === '全部' || card.dataset.category === category;
-      card.classList.toggle('is-hidden', !show);
+    document.querySelectorAll('#project-container-data .project-category-section').forEach((section) => {
+      const show = category === '全部' || section.dataset.category === category;
+      section.classList.toggle('is-hidden', !show);
     });
   };
 
@@ -179,18 +181,17 @@
         return `${number}`;
       }
 
-      for (let i = 0; i < result.length; i++) {
-        const project = result[i];
+      function renderProjectCard(project) {
         const category = categoryOf(project);
-        html_str_list.push(`
+        return `
           <article class="project-card" data-repo="${project.github_repo}" data-category="${category}">
             <a class="project-link" target="_blank" href="${project.html_url}" aria-label="View ${project.title} on GitHub">
+              <span class="project-card-category">${category}</span>
               <div class="project-card__top">
                 <div class="project-github-icon" aria-hidden="true">
                   <i class="bi bi-github"></i>
                 </div>
                 <h3 class="project-name">${project.title}</h3>
-                <span class="project-tag">${category}</span>
               </div>
 
               <p class="project-description">${project.description}</p>
@@ -203,15 +204,40 @@
                   </span>
                   <span class="project-badge project-badge--forks" data-forks-repo="${project.github_repo}">
                     <i class="bi bi-diagram-2-fill" aria-hidden="true"></i>
-                    <span data-forks-count>--</span>
+                    <span data-forks-count>${formatCount(project.forks)}</span>
                   </span>
                 </div>
                 <span class="project-cta">View on GitHub <i class="bi bi-arrow-right-short" aria-hidden="true"></i></span>
               </div>
             </a>
           </article>
-        `);
+        `;
       }
+
+      const groupedProjects = new Map();
+      result.forEach((project) => {
+        const category = categoryOf(project);
+        if (!groupedProjects.has(category)) {
+          groupedProjects.set(category, []);
+        }
+        groupedProjects.get(category).push(project);
+      });
+
+      const orderedCategories = [
+        ...PROJECT_CATEGORIES.filter((category) => category !== '全部' && groupedProjects.has(category)),
+        ...Array.from(groupedProjects.keys()).filter((category) => !PROJECT_CATEGORIES.includes(category))
+      ];
+
+      orderedCategories.forEach((category) => {
+        html_str_list.push(`
+          <section class="project-category-section" data-category="${category}">
+            <h3 class="project-category-title">${category}</h3>
+            <div class="project-category-grid">
+              ${groupedProjects.get(category).map(renderProjectCard).join('')}
+            </div>
+          </section>
+        `);
+      });
 
       const html_str = html_str_list.join('');
 
@@ -259,7 +285,7 @@
         </div>
 
         <div class="col-lg-2 col-md-4 footer-wechat">
-          <h4>Github</h4>
+          <h4>GitHub</h4>
           <img src="assets/img/qrcode/github.png" alt="MLNLP_wechat">
         </div>
 
@@ -295,16 +321,13 @@
       &copy; Copyright <strong>TheEvent</strong>. Modified by <strong>MLNLP</strong>. All Rights Reserved
     </div>
     <div class="credits site-maintainers">
-        网站建设与维护（排名不分先后）：上海交通大学 范静如 · 新西兰奥克兰大学 包启明 · 中南大学 周璟轩
+        网站建设与维护（排名不分先后）：上海交通大学 范静如 · 新西兰奥克兰大学 包启明 · 中南大学 周璟轩 · 澳门科技大学 王鹏
     </div>
     <div class="credits">
       Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
   </div>
 </footer>
-
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-        class="bi bi-arrow-up-short"></i></a>
 
 <!-- Vendor JS Files -->
 <script src="assets/vendor/aos/aos.js"></script>
@@ -315,7 +338,7 @@
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js?v=20260621-fix15"></script>
-<script src="assets/js/project-page.js?v=20260621-fix15"></script>
+<script src="assets/js/project-page.js?v=20260721-github-stats"></script>
 
 </body>
 

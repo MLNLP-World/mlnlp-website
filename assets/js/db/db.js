@@ -6,6 +6,7 @@
  * @throws {Error} 如果数据库文件加载失败或初始化过程中发生错误，将抛出异常。
  */
 let cachedDb = null;
+const DB_PATH = 'db/mlnlp.sqlite?v=20260720-talk-77-cover';
 
 async function initDb(path) {
     if (cachedDb == null) {
@@ -31,7 +32,7 @@ async function initDb(path) {
 }
 
 async function execute(query) {
-    const db = await initDb('db/mlnlp.sqlite');
+    const db = await initDb(DB_PATH);
 
     const result = db.exec(query);
     try {

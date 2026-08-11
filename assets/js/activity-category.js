@@ -3,6 +3,10 @@
 
     const PAGE_SIZE = 5;
     const AUTOPLAY_DELAY = 6200;
+    const DEFAULT_FEATURED_ACTIVITY = {
+        type: 2,
+        typeId: 41
+    };
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     let slideIndex = 1;
@@ -170,12 +174,11 @@
         setText("event-topic", topic.topic);
         setText("event-subtopic", summary.summary);
         summaryNode?.setAttribute("data-full-content", summary.full);
-        summaryNode?.setAttribute("title", summary.full);
+        summaryNode?.removeAttribute("title");
         summaryNode?.setAttribute("tabindex", "0");
         setText("event-time", formatEventTime(activity));
 
         updateLink("event-detail-link", activity.html_url, "查看详情", "详情待更新");
-        updateLink("event-replay-link", activity.video_url, "观看回放", "回放待更新");
     };
 
     async function loadPage(totalPages, currentPage) {
@@ -208,7 +211,7 @@
                                         <p class="activity-category-data-day">${escapeHtml(date.day)}</p>
                                     </div>
                                 </div>
-                                <p class="activity-category-data-description" tabindex="0" title="${escapeHtml(description.full)}" data-full-content="${escapeHtml(description.full)}">${escapeHtml(description.summary)}</p>
+                                <p class="activity-category-data-description" tabindex="0" data-full-content="${escapeHtml(description.full)}">${escapeHtml(description.summary)}</p>
                             </div>
                         </div>
                     </article>
@@ -266,14 +269,30 @@
 
     async function initSlides() {
         try {
-            const result = await findActivitiesByPage(1, PAGE_SIZE, currentType);
-            featuredActivities = result.activities || [];
+            const [result, defaultResult] = await Promise.all([
+                findActivitiesByPage(1, PAGE_SIZE, currentType),
+                findActivity(DEFAULT_FEATURED_ACTIVITY.type, DEFAULT_FEATURED_ACTIVITY.typeId)
+            ]);
+            const recentActivities = result.activities || [];
+            const defaultActivity = defaultResult && defaultResult.activity;
+
+            featuredActivities = defaultActivity
+                ? [
+                    defaultActivity,
+                    ...recentActivities.filter((activity) => !(
+                        Number(activity.type) === DEFAULT_FEATURED_ACTIVITY.type &&
+                        Number(activity.type_id) === DEFAULT_FEATURED_ACTIVITY.typeId
+                    ))
+                ].slice(0, PAGE_SIZE)
+                : recentActivities;
 
             const slidesHtml = featuredActivities.map((activity, index) => `
-                <a href="${escapeHtml(activity.html_url)}" class="slide" aria-label="${escapeHtml(activity.title)}">
-                    <img src="${escapeHtml(activity.cover_url)}" alt="${escapeHtml(activity.title)}">
-                </a>
-            `).join("");
+                    <div class="slide" aria-label="${escapeHtml(activity.title)}">
+                        <a href="${escapeHtml(activity.html_url)}" class="activity-slide-detail-link" aria-label="${escapeHtml(activity.title)}">
+                            <img src="${escapeHtml(activity.cover_url)}" alt="${escapeHtml(activity.title)}">
+                        </a>
+                    </div>
+                `).join("");
 
             const dotsHtml = featuredActivities.map((activity, index) => `
                 <button class="dot" type="button" onclick="currentSlide(${index + 1})" aria-label="查看活动 ${index + 1}: ${escapeHtml(activity.title)}"></button>

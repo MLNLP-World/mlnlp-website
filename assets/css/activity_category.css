@@ -95,7 +95,7 @@ body.activity-page::after {
     z-index: 901;
 }
 
-.activity-page #header #logo img {
+.activity-page #header #logo:not(.site-brand) img {
     max-height: 34px;
 }
 
@@ -317,6 +317,12 @@ body.activity-page::after {
     transform: scale(1);
 }
 
+.activity-page .activity-slide-detail-link {
+    position: absolute;
+    inset: 0;
+    display: block;
+}
+
 .activity-page .slide img {
     display: block;
     width: 100%;
@@ -387,10 +393,6 @@ body.activity-page::after {
     overflow: hidden;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4;
-}
-
-.activity-page .event-subtopic[data-full-content] {
-    cursor: help;
 }
 
 .activity-page .event-meta-list {
@@ -490,20 +492,20 @@ body.activity-page::after {
 .activity-page .next-arrow {
     display: grid;
     place-items: center;
-    width: 42px;
-    height: 42px;
+    width: 28px;
+    height: 48px;
     padding: 0;
-    color: rgba(51, 65, 85, 0.72);
+    color: rgba(51, 65, 85, 0.54);
     cursor: pointer;
     pointer-events: auto;
-    background: rgba(255, 255, 255, 0.32);
-    border: 1px solid rgba(255, 255, 255, 0.42);
-    border-radius: 999px;
-    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.035);
-    opacity: 0.72;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    transition: transform 280ms var(--activity-ease), opacity 280ms ease, color 280ms ease, background-color 280ms ease, border-color 280ms ease, box-shadow 280ms var(--activity-ease);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    opacity: 0.9;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transition: transform 280ms var(--activity-ease), opacity 280ms ease, color 280ms ease;
 }
 
 .activity-page .prev-arrow:hover,
@@ -511,35 +513,35 @@ body.activity-page::after {
 .activity-page .prev-arrow:focus-visible,
 .activity-page .next-arrow:focus-visible {
     color: var(--activity-heading);
-    background: rgba(255, 255, 255, 0.66);
-    border-color: rgba(148, 163, 184, 0.22);
-    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.07);
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
     opacity: 1;
     transform: translateY(-1px);
 }
 
 .activity-page .prev-arrow i,
 .activity-page .next-arrow i {
-    font-size: 18px;
+    font-size: 28px;
     line-height: 1;
 }
 
 .activity-page .dots-container {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    display: inline-flex;
+    position: relative;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 9px 12px;
-    background: rgba(255, 255, 255, 0.54);
-    border: 1px solid rgba(148, 163, 184, 0.14);
+    width: 100%;
+    margin: 18px 0 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
     border-radius: 999px;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    transform: translateX(-50%);
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transform: none;
 }
 
 .activity-page .dot {
@@ -631,6 +633,7 @@ body.activity-page::after {
 }
 
 .activity-page .activity-category-box {
+    position: relative;
     align-items: stretch;
     width: 100%;
     margin: 0;
@@ -684,8 +687,9 @@ body.activity-page::after {
 .activity-page .activity-category-info-inner {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     width: 100%;
+    height: 100%;
     min-height: 100%;
     text-align: left;
 }
@@ -764,10 +768,6 @@ body.activity-page::after {
     text-align: left;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-}
-
-.activity-page .activity-category-data-description[data-full-content] {
-    cursor: help;
 }
 
 .activity-page #pagination {
@@ -964,7 +964,7 @@ body.activity-page::after {
         height: 68px;
     }
 
-    .activity-page #header #logo img {
+    .activity-page #header #logo:not(.site-brand) img {
         max-height: 30px;
     }
 
@@ -1048,10 +1048,6 @@ body.activity-page::after {
         padding: 6px 4px 0;
     }
 
-    .activity-page .dots-container {
-        bottom: 18px;
-    }
-
     .activity-page #schedule {
         padding: 0 20px 104px;
     }
@@ -1124,8 +1120,8 @@ body.activity-page::after {
 
     .activity-page .prev-arrow,
     .activity-page .next-arrow {
-        width: 38px;
-        height: 38px;
+        width: 28px;
+        height: 44px;
     }
 
     .activity-page .event-actions {

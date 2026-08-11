@@ -16,6 +16,11 @@
         });
     }
 
+    function isInInitialViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0;
+    }
+
     function initReveal() {
         const targets = document.querySelectorAll(".committee-hero, .member-group, .member");
 
@@ -46,7 +51,26 @@
             rootMargin: "0px 0px -8% 0px"
         });
 
-        targets.forEach((target) => observer.observe(target));
+        targets.forEach((target) => {
+            if (!target.classList.contains("committee-hero")) {
+                target.setAttribute("data-committee-reveal", "");
+            }
+
+            if (isInInitialViewport(target)) {
+                target.classList.add("is-visible");
+
+                if (target.classList.contains("member-group")) {
+                    target.querySelectorAll(".member").forEach((card, index) => {
+                        card.classList.add("is-visible");
+                        card.style.setProperty("--member-delay", `${index * 30}ms`);
+                    });
+                }
+
+                return;
+            }
+
+            observer.observe(target);
+        });
     }
 
     function waitForMembers() {
@@ -97,4 +121,5 @@
     }
 
     window.addEventListener("load", waitForMembers);
+    window.addEventListener("mlnlp:committee-members-rendered", waitForMembers);
 })();

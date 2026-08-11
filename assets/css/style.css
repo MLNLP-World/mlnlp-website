@@ -195,6 +195,10 @@ h6 {
     z-index: 901;
 }
 
+#header #logo.site-brand {
+    transform: translateX(-8px);
+}
+
 #header #logo h1 {
     margin: 0;
     font-size: 36px;
@@ -218,9 +222,44 @@ h6 {
     max-height: 40px;
 }
 
+#header #logo.site-brand a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #1f2937;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+#header #logo.site-brand img {
+    width: 34px;
+    height: 34px;
+    max-height: none;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
 @media (max-width: 992px) {
     #header #logo img {
         max-height: 30px;
+    }
+
+    #header #logo.site-brand span {
+        font-size: 15px;
+    }
+
+    #header #logo.site-brand img {
+        width: 32px;
+        height: 32px;
+        max-height: none;
+    }
+}
+
+@media (max-width: 575px) {
+    #header #logo.site-brand span {
+        display: none;
     }
 }
 
@@ -2028,16 +2067,24 @@ h6 {
     padding: 60px 0 30px 0;
 }
 
+#footer .footer-top .row {
+    row-gap: 28px;
+}
+
 #footer .footer-top .footer-info {
     margin-bottom: 30px;
 }
 
 #footer .footer-top .footer-wechat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     margin-bottom: 30px;
 }
 
 #footer .footer-top .footer-wechat img {
-    height: 180px;
+    width: min(180px, 100%);
+    height: auto;
     margin-bottom: 10px;
 }
 
@@ -2176,6 +2223,50 @@ h6 {
     text-align: center;
     font-size: 13px;
     color: #ddd;
+}
+
+#footer .credits a {
+    color: #FDE68A;
+    font-weight: 600;
+}
+
+#footer .credits a:hover {
+    color: #FFFFFF;
+}
+
+@media (max-width: 991px) {
+    #footer .footer-top .row {
+        row-gap: 34px;
+    }
+
+    #footer .footer-top .footer-wechat {
+        align-items: center;
+        margin-bottom: 0;
+        text-align: center;
+    }
+
+    #footer .footer-top .footer-wechat h4 {
+        width: min(180px, 100%);
+    }
+
+    #footer .footer-top .footer-wechat img {
+        width: clamp(132px, 28vw, 168px);
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 575px) {
+    #footer .footer-top {
+        padding: 48px 0 34px 0;
+    }
+
+    #footer .footer-top .row {
+        row-gap: 26px;
+    }
+
+    #footer .footer-top .footer-wechat img {
+        width: min(154px, 44vw);
+    }
 }
 
 .end-time {

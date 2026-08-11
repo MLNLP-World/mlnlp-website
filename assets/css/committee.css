@@ -88,7 +88,28 @@ body.committee-page::after {
     z-index: 901;
 }
 
-.committee-page #header #logo img {
+.committee-page #header #logo.site-brand a {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    color: var(--committee-text) !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+}
+
+.committee-page #header #logo.site-brand img {
+    width: 34px !important;
+    height: 34px !important;
+    max-width: 34px !important;
+    max-height: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+}
+
+.committee-page #header #logo:not(.site-brand) img {
     max-height: 34px;
 }
 
@@ -241,7 +262,8 @@ body.committee-page::after {
     margin-top: 96px;
 }
 
-.committee-page #committee-container .member-group:first-child {
+.committee-page #committee-container .member-group:first-child,
+.committee-page #committee-former-container .member-group:first-child {
     margin-top: 0;
 }
 
@@ -267,7 +289,7 @@ body.committee-page::after {
 .committee-page .member-grid,
 .committee-page #committee .schedule-item {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 260px));
+    grid-template-columns: repeat(3, minmax(0, 286px));
     justify-content: center;
     gap: 40px 48px;
     width: 100%;
@@ -275,6 +297,30 @@ body.committee-page::after {
     margin: 0 auto;
     padding: 0;
     border-radius: 0;
+}
+
+.committee-page .member-grid--leader,
+.committee-page #committee .schedule-item.member-grid--leader {
+    grid-template-columns: minmax(0, 286px);
+    margin-bottom: 40px;
+}
+
+.committee-page .member-subtitle {
+    margin: 0 auto 30px;
+    color: var(--committee-body);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: center;
+    letter-spacing: 0;
+}
+
+.committee-page .member-grid + .member-subtitle {
+    margin-top: 58px;
+}
+
+.committee-page .member-grid + .team-chair {
+    margin-top: 82px;
 }
 
 .committee-page #committee .schedule-item .schedule-card,
@@ -288,59 +334,94 @@ body.committee-page::after {
 
 .committee-page #committee .team .member,
 .committee-page .member {
+    position: relative;
+    isolation: isolate;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-self: center;
     width: 100%;
-    max-width: 260px;
-    min-height: 250px;
+    max-width: 286px;
+    min-height: 318px;
     margin: 0;
-    padding: 8px 8px 12px;
-    overflow: visible;
+    padding: 14px 14px 18px;
+    overflow: hidden;
     color: inherit;
     text-align: center;
+    text-decoration: none;
     background: transparent;
     border: 0;
     border-radius: 0;
     box-shadow: none;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    transition: transform 280ms var(--committee-ease);
+    transition: transform 300ms var(--committee-ease), border-color 300ms var(--committee-ease), box-shadow 300ms var(--committee-ease), background 300ms var(--committee-ease);
+}
+
+.committee-page #committee .team .member::before,
+.committee-page .member::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: transparent;
+    opacity: 0;
+    transition: opacity 300ms var(--committee-ease);
+}
+
+.committee-page .avatar-wrapper,
+.committee-page .member-info {
+    position: relative;
+    z-index: 1;
 }
 
 .committee-page #committee .team .member:hover,
 .committee-page .member:hover {
     color: inherit;
+    border-color: transparent;
+    box-shadow: none;
     transform: translateY(-6px);
+}
+
+.committee-page #committee .team .member:hover::before,
+.committee-page .member:hover::before {
+    opacity: 0;
 }
 
 .committee-page .avatar-wrapper {
     display: grid;
     place-items: center;
-    width: 150px;
-    height: 150px;
-    padding: 3px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.55), rgba(99, 102, 241, 0.30), rgba(255, 255, 255, 0.75));
-    box-shadow: 0 12px 32px rgba(14, 165, 233, 0.12);
+    width: min(100%, 184px);
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    padding: 0;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow:
+        0 16px 32px rgba(15, 23, 42, 0.10),
+        0 8px 18px rgba(14, 165, 233, 0.10);
     transition: transform 280ms var(--committee-ease), box-shadow 280ms var(--committee-ease), background 280ms var(--committee-ease);
 }
 
 .committee-page .member:hover .avatar-wrapper {
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.68), rgba(99, 102, 241, 0.38), rgba(255, 255, 255, 0.82));
-    box-shadow: 0 16px 38px rgba(14, 165, 233, 0.16);
-    transform: translateY(-4px) scale(1.025);
+    background: transparent;
+    box-shadow:
+        0 24px 44px rgba(15, 23, 42, 0.14),
+        0 12px 28px rgba(14, 165, 233, 0.16);
+    transform: translateY(-5px) perspective(700px) rotateX(3deg) rotateY(-3deg);
 }
 
 .committee-page #committee .schedule-item .speaker,
 .committee-page .avatar-inner {
-    width: 144px;
-    height: 144px;
+    width: 100%;
+    height: 100%;
     margin: 0;
     overflow: hidden;
     float: none;
-    border-radius: 999px;
+    border-radius: 50%;
     background: transparent;
+    clip-path: circle(50% at 50% 50%);
 }
 
 .committee-page #committee .schedule-item .speaker img,
@@ -350,15 +431,38 @@ body.committee-page::after {
     height: 100%;
     margin: 0;
     object-fit: cover;
-    object-position: center;
-    transform: none;
+    object-position: center 28%;
+    transform: translateY(var(--avatar-shift-y, 0)) scale(var(--avatar-scale, 1));
     transition: transform 280ms var(--committee-ease);
+}
+
+.committee-page #committee .schedule-item .avatar-inner.speaker img,
+.committee-page #committee .schedule-item .avatar-inner img,
+.committee-page .avatar-wrapper .avatar-inner img {
+    width: 100%;
+    height: 100%;
+    margin-left: 0;
+    border-radius: 50%;
+}
+
+.committee-page .avatar-wrapper .avatar-inner img.avatar-tugeng {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    clip-path: circle(50% at 50% 50%);
+    object-fit: cover;
+    object-position: center 20%;
+}
+
+.committee-page .member:hover .avatar-inner img {
+    transform: translateY(var(--avatar-shift-y, 0)) scale(var(--avatar-hover-scale, 1.035));
 }
 
 .committee-page #committee .team .member .member-info,
 .committee-page .member-info {
     width: 100%;
-    padding: 22px 0 0;
+    padding: 18px 4px 0;
     text-align: center;
 }
 
@@ -386,6 +490,13 @@ body.committee-page::after {
     line-height: 1.6;
 }
 
+.committee-page .member-info .member-status {
+    margin-bottom: 2px;
+    color: var(--committee-accent-dark);
+    font-size: 13px;
+    font-weight: 600;
+}
+
 .committee-page .committee-hero,
 .committee-page .member-group,
 .committee-page .member {
@@ -396,8 +507,8 @@ body.committee-page::after {
 .committee-page.committee-page--enhanced .committee-hero h2,
 .committee-page.committee-page--enhanced .committee-subtitle,
 .committee-page.committee-page--enhanced .sort-pill,
-.committee-page.committee-page--enhanced .member-group,
-.committee-page.committee-page--enhanced .member {
+.committee-page.committee-page--enhanced .member-group[data-committee-reveal],
+.committee-page.committee-page--enhanced .member[data-committee-reveal] {
     opacity: 0;
     transform: translateY(20px);
 }
@@ -487,8 +598,15 @@ body.committee-page::after {
         height: 68px;
     }
 
-    .committee-page #header #logo img {
+    .committee-page #header #logo:not(.site-brand) img {
         max-height: 30px;
+    }
+
+    .committee-page #header #logo.site-brand img {
+        width: 32px !important;
+        height: 32px !important;
+        max-width: 32px !important;
+        max-height: none !important;
     }
 
     .committee-page #navbar.navbar-mobile {
@@ -573,6 +691,10 @@ body.committee-page::after {
 }
 
 @media (max-width: 575px) {
+    .committee-page #header #logo.site-brand span {
+        display: none !important;
+    }
+
     .committee-page #committee.committee-page-section {
         padding: 68px 16px 88px;
     }
@@ -597,27 +719,34 @@ body.committee-page::after {
 
     .committee-page .member-grid,
     .committee-page #committee .schedule-item {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 28px;
+        grid-template-columns: minmax(0, 286px);
+        justify-content: center;
+        justify-items: center;
+        gap: 32px;
     }
 
     .committee-page #committee .team .member,
     .committee-page .member {
-        max-width: none;
-        min-height: 222px;
-        padding: 6px 6px 10px;
+        justify-self: center;
+        max-width: 286px;
+        min-height: 292px;
+        margin-right: auto;
+        margin-left: auto;
+        padding: 12px 12px 16px;
     }
 
     .committee-page .avatar-wrapper {
-        width: 118px;
-        height: 118px;
-        padding: 3px;
+        width: min(184px, 100%);
+        aspect-ratio: 1 / 1;
+        margin-right: auto;
+        margin-left: auto;
+        padding: 0;
     }
 
     .committee-page #committee .schedule-item .speaker,
     .committee-page .avatar-inner {
-        width: 112px;
-        height: 112px;
+        width: 100%;
+        height: 100%;
     }
 
     .committee-page #committee .team .member .member-info h4,
@@ -629,7 +758,7 @@ body.committee-page::after {
 @media (max-width: 420px) {
     .committee-page .member-grid,
     .committee-page #committee .schedule-item {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: minmax(0, min(100%, 286px));
     }
 }
 
@@ -653,8 +782,8 @@ body.committee-page::after {
     .committee-page.committee-page--enhanced .committee-hero h2,
     .committee-page.committee-page--enhanced .committee-subtitle,
     .committee-page.committee-page--enhanced .sort-pill,
-    .committee-page.committee-page--enhanced .member-group,
-    .committee-page.committee-page--enhanced .member,
+    .committee-page.committee-page--enhanced .member-group[data-committee-reveal],
+    .committee-page.committee-page--enhanced .member[data-committee-reveal],
     .committee-page .member:hover,
     .committee-page .member:hover .avatar-wrapper {
         opacity: 1 !important;

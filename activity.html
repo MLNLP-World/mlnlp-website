@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <!-- 谷歌分析脚本 -->
@@ -16,8 +16,8 @@
         gtag('config', 'G-XEN8DSJX72');
     </script>
     <script src="./assets/vendor/sql/sql-wasm.js"></script>
-    <script src="./assets/js/db/db.js?v=20260621-fix15"></script>
-    <script src="./assets/js/db/activity.js?v=20260621-fix15"></script>
+  <script src="./assets/js/db/db.js?v=20260720-talk-77-cover"></script>
+    <script src="./assets/js/db/activity.js?v=20260721-seminar-41-hd"></script>
 
     <meta charset="utf-8">
     <!-- 设置视口，使页面在不同设备上自适应屏幕宽度，初始缩放比例为1.0 -->
@@ -26,7 +26,7 @@
     <!-- 页面标题 -->
     <title>学术活动</title>
     <!-- 页面描述 -->
-    <meta content="" name="description">
+    <meta content="MLNLP 学术活动详情，聚焦自然语言处理、机器学习与 AI 学术交流。" name="description">
     <!-- 页面关键词 -->
     <meta content="" name="keywords">
     <!-- 网站图标 -->
@@ -35,7 +35,7 @@
 
     <!-- 引入谷歌字体 -->
     <link
-            href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
             rel="stylesheet">
 
     <!-- 引入 css 文件 -->
@@ -44,29 +44,33 @@
     <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
     <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-    <link href="assets/css/style.css?v=20260621-fix15" rel="stylesheet">
-    <link href="assets/css/activity.css?v=20260621-fix15" rel="stylesheet">
+    <link href="assets/css/style.css?v=20260629-logo-left" rel="stylesheet">
+    <link href="assets/css/activity_category.css?v=20260625-activity-replay-badge" rel="stylesheet">
+    <link href="assets/css/activity.css?v=20260630-detail-info-rail" rel="stylesheet">
 
     <!-- Template Main CSS File -->
     <script src="assets/js/jquery.min.js?v=20260621-fix15"></script>
 </head>
 
-<body>
+<body class="activity-page activity-detail-page">
 
 <!-- ==================== 网站头 ==================== -->
 <header id="header" class="d-flex align-items-center">
     <div class="container-fluid container-xxl d-flex align-items-center">
 
         <!-- 网站 logo -->
-        <div id="logo" class="me-auto row">
-            <a href="index.html" class="scrollto"><img src="assets/img/logo/logo-1.png" alt="" title=""></a>
+        <div id="logo" class="me-auto site-brand">
+            <a href="index.html" aria-label="MLNLP 社区首页">
+                <img src="assets/img/logo/logo.jpeg" alt="MLNLP">
+                <span>MLNLP</span>
+            </a>
         </div>
 
         <!-- 导航栏 -->
         <nav id="navbar" class="navbar order-last order-lg-0">
             <ul>
-                <li><a class="nav-link scrollto" href="index.html">首页</a></li>
-                <li class="nav-dropdown"><a class="nav-link scrollto active" href="activity_category.html">学术活动</a>
+                <li><a class="nav-link" href="index.html">首页</a></li>
+                <li class="nav-dropdown"><a class="nav-link active" href="activity_category.html">学术活动</a>
                     <ul class="nav-dropdown-menu">
                         <li><a href="activity_category.html?type=0">全部</a></li>
                         <li><a href="activity_category.html?type=1">年度大会</a></li>
@@ -74,15 +78,15 @@
                         <li><a href="activity_category.html?type=3">学术Talk</a></li>
                     </ul>
                 </li>
-                <li class="nav-dropdown"><a class="nav-link scrollto" href="project.html">开源项目</a>
+                <li class="nav-dropdown"><a class="nav-link" href="project.html">开源项目</a>
                     <ul class="nav-dropdown-menu">
                         <li><a href="project.html?cat=全部">全部</a></li>
+                        <li><a href="project.html?cat=论文写作">论文写作</a></li>
                         <li><a href="project.html?cat=课程笔记">课程笔记</a></li>
                         <li><a href="project.html?cat=实用工具">实用工具</a></li>
-                        <li><a href="project.html?cat=论文写作">论文写作</a></li>
                     </ul>
                 </li>
-                <li><a class="nav-link scrollto" href="committee.html">社区成员</a></li>
+                <li><a class="nav-link" href="committee.html">社区成员</a></li>
                 <li><a class="nav-link scrollto" href="#footer">联系我们</a></li>
             </ul>
             <!-- 移动端导航切换图标 -->
@@ -98,226 +102,46 @@
 
 <main id="main">
 
-    <!-- ======= 背景 ======= -->
-    <div id="activity-bg">
-        <img src="" alt="" title="">
-    </div>
+    <div id="activity-detail-root" class="activity-detail-shell" aria-live="polite"></div>
+
+    <script src="assets/js/activity-detail.js?v=20260721-seminar-agenda-times"></script>
 
 
-    <!-- ======= 内容 ======= -->
-    <section id="schedule" class="section-with-bg">
-        <div id="activity-content" class="container" data-aos="fade-up">
-            <div id="activity-info" class="section-header"></div>
-
-            <div class="col">
-                <div class="agenda-description-box col-lg-9" data-aos="fade-up">
-                    <div id="activity-description"></div>
-                </div>
-                <div class="tab-content row justify-content-center" data-aos="fade-up" data-aos-delay="200">
-                    <div id="activity-segments" class="col-lg-9 tab-pane fade show active" data-aos="fade-up"></div>
-                </div>
+    <footer id="footer" class="detail-footer">
+        <div class="detail-footer__inner">
+            <div class="detail-footer__brand">
+                <img src="assets/img/logo/logo-footnote.png" alt="MLNLP">
+                <p>MLNLP 社区致力于促进自然语言处理、机器学习学术界、产业界和广大爱好者之间的交流与进步。</p>
+                <a href="mailto:mlnlp2021@163.com"><i class="bi bi-envelope"></i>mlnlp2021@163.com</a>
             </div>
-        </div>
-    </section>
 
-    <script>
-        // 页面加载完成后执行获取数据的操作
-        window.onload = async function () {
-            // 获取前端传来的 ID
-            const params = new URLSearchParams(window.location.search);
-            if (params.has("type") && params.has("id")) {
-                type = params.get("type");
-                typeId = params.get("id");
-            } else {
-                type = 2;
-                typeId = 27;
-            }
+            <div class="detail-footer__nav">
+                <h2>快速导航</h2>
+                <a href="index.html">首页</a>
+                <a href="activity_category.html">学术活动</a>
+                <a href="project.html">开源项目</a>
+                <a href="committee.html">社区成员</a>
+            </div>
 
-            await loadActivityDetails(type, typeId);
-        };
+            <div class="detail-footer__social">
+                <h2>社交平台</h2>
+                <a href="https://mp.weixin.qq.com/s/mRXbfm4aJQb0FMB6YQy1QQ" target="_blank" rel="noopener"><i class="bi bi-wechat"></i>微信公众号</a>
+                <a href="https://github.com/MLNLP-World" target="_blank" rel="noopener"><i class="bi bi-github"></i>GitHub</a>
+                <a href="https://space.bilibili.com/168887299" target="_blank" rel="noopener"><i class="bi bi-play-btn"></i>Bilibili</a>
+            </div>
 
-        async function loadActivityDetails(type, typeId) {
-            try {
-                // 发起请求获取活动数据
-                const result = await findActivity(type, typeId);
-
-                const activity = result.activity;
-                const segments = result.activitySegments;
-
-                // 格式化日期
-                const date = new Date(activity.time);
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, "0");
-                const day = String(date.getDate()).padStart(2, "0");
-
-                // 将数据展示到页面上
-                // 背景图片
-                const bg_html_str = `<img id="activity-data-cover-bg" src="${activity.cover_url}" alt="" title="">\n`;
-                $("#activity-bg").html(bg_html_str);
-
-                // 活动信息
-                let info_html_str = `
-            <h2>${activity.title}</h2>
-            <p>${year}/${month}/${day}</p>
-            <img id="activity-data-cover" src="${activity.cover_url}" alt="" title="">
-        `;
-                if (activity.video_url) {
-                    info_html_str += `
-                        <a href="${activity.video_url}">
-                            <img id="activity-data-bilibili" src="assets/img/logo/bilibili.png" alt="">
-                        </a>
-                    `;
-                }
-                $("#activity-info").html(info_html_str);
-
-                // 活动描述
-                const desc_html_str = `<p>${activity.description}</p>`;
-                $("#activity-description").html(desc_html_str);
-
-                // 处理活动分段信息
-                let html_str = '';
-                for (const segment of segments) {
-                    // 格式化时间
-                    const startTime = new Date(segment.start_time);
-                    const endTime = new Date(segment.end_time);
-                    const startYear = startTime.getFullYear();
-                    const startMonth = String(startTime.getMonth() + 1).padStart(2, "0");
-                    const startDay = String(startTime.getDate()).padStart(2, "0");
-                    const startHour = String(startTime.getHours()).padStart(2, "0");
-                    const startMinute = String(startTime.getMinutes()).padStart(2, "0");
-                    const endHour = String(endTime.getHours()).padStart(2, "0");
-                    const endMinute = String(endTime.getMinutes()).padStart(2, "0");
-
-                    console.log(segment)
-
-                    let video_html = '';
-                    if (segment.video_url != null) {
-                        video_html = `
-                            <a href="${segment.video_url}">
-                                <i class="bi bi-camera-reels-fill"></i>
-                            </a>
-                        `;
-                    }
-
-                    if (segment.type === 1) {
-                        html_str += `
-                    <div class="tab-pane segment-1">
-                        <div class="segment-1-layout">
-                            <h4>${segment.heading}</h4>
-                            <div class="segment-time">${startYear}/${startMonth}/${startDay} ${startHour}:${startMinute}-${endHour}:${endMinute}</div>
-                            <a href="">
-                                <div class="row col-2 segment-cover">
-                                    <img loading="lazy" src="${segment.avatar_url}" alt="${segment.name}">
-                                </div>
-                                <div class="row agenda-item">
-                                    <h4>${segment.name}</h4>
-                                    <p class="span-block">${segment.organization}</p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                `;
-                    } else if (segment.type === 2) {
-                        html_str += `
-                    <div class="row segment-2">
-                        <div class="col-2">
-                            <div class="row calender-container">
-                                <time>${startHour}:${startMinute}</time>
-                                <time class="end-time">${endHour}:${endMinute}</time>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <a class="speaker" href="" target="_blank">
-                                <img loading="lazy" src="${segment.avatar_url}" alt="${segment.name}">
-                            </a>
-                        </div>
-                        <div class="col-8">
-                            <div class="label-box">
-                                ${video_html}
-                            </div>
-                            <a href="" target="_blank">
-                                <h4>${segment.name} <span class="span-block">${segment.organization}${segment.title}</span> </h4>
-                            </a>
-                            <p class="item-title"><strong>${segment.heading}</strong></p>
-                            <p class="item-body">${segment.description}</p>
-                        </div>
-                    </div>
-                `;
-                    }
-                }
-
-                // 将生成的 HTML 字符串插入到页面中
-                $("#activity-segments").html(html_str);
-            } catch (error) {
-                console.error('Error fetching activity data:', error);
-            }
-        }
-    </script>
-
-
-    <footer id="footer">
-        <div class="footer-top">
-            <div class="container">
-                <div class="row">
-
-                    <div class="col-lg-3 col-md-4 footer-info">
-                        <img src="assets/img/logo/logo-footnote.png" alt="MLNLP">
-                        <p>
-                            MLNLP社区的愿景是促进国内外自然语言处理，机器学习学术界、产业界和广大爱好者之间的交流和进步，特别是初学者同学们的进步。</p>
-                    </div>
-
-                    <div class="col-lg-2 col-md-4 footer-wechat">
-                        <h4>微信公众号</h4>
-                        <img src="assets/img/qrcode/wechat.jpg" alt="MLNLP_wechat">
-                    </div>
-
-                    <div class="col-lg-2 col-md-4 footer-wechat">
-                        <h4>Github</h4>
-                        <img src="assets/img/qrcode/github.png" alt="MLNLP_wechat">
-                    </div>
-
-                    <div class="col-lg-2 col-md-4 footer-wechat">
-                        <h4>Bilibili</h4>
-                        <img src="assets/img/qrcode/bilibili.png" alt="MLNLP_wechat">
-                    </div>
-
-                    <div class="col-lg-2 col-md-6 footer-contact">
-                        <h4>联系我们</h4>
-                        <p>
-                            <strong>邮箱:</strong><a href="mailto:contact@mlnlp2023.com"
-                                                     style="color: #ffffff;">mlnlp2021@163.com</a><br>
-                        </p>
-
-                        <div class="social-links">
-                            <a href="https://mp.weixin.qq.com/s/mRXbfm4aJQb0FMB6YQy1QQ" class="wechat"
-                               target="_blank"><i class="bi bi-wechat"></i></a>
-                            <a href="https://github.com/MLNLP-World" class="github" target="_blank"><i
-                                    class="bi bi-github"></i></a>
-                            <a href="https://space.bilibili.com/168887299" class="bilibili" target="_blank"><i><img
-                                    src="assets/img/logo/bilibili-fill.svg" alt="Bootstrap" width="20"
-                                    height="20"></i></a>
-                        </div>
-                    </div>
-
-                </div>
+            <div class="detail-footer__qr">
+                <h2>关注公众号</h2>
+                <img src="assets/img/qrcode/wechat.jpg" alt="MLNLP 微信公众号二维码">
             </div>
         </div>
 
-        <div class="container">
-            <div class="copyright">
-                &copy; Copyright <strong>TheEvent</strong>. Modified by <strong>MLNLP</strong>. All Rights Reserved
-            </div>
-            <div class="credits site-maintainers">
-                网站建设与维护（排名不分先后）：上海交通大学 范静如 · 新西兰奥克兰大学 包启明 · 中南大学 周璟轩
-            </div>
-            <div class="credits">
-                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-            </div>
+        <div class="detail-footer__bottom">
+            <div>&copy; Copyright <strong>TheEvent</strong>. Modified by <strong>MLNLP</strong>. All Rights Reserved</div>
+            <div>网站建设与维护（排名不分先后）：上海交通大学 范静如 · 新西兰奥克兰大学 包启明 · 中南大学 周璟轩 · 澳门科技大学 王鹏</div>
+            <div>Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a></div>
         </div>
     </footer>
-
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
 
     <!-- Vendor JS Files -->
     <script src="assets/vendor/aos/aos.js"></script>

@@ -231,7 +231,6 @@
     tooltip.className = 'mlnlp-content-tooltip'
     tooltip.setAttribute('role', 'tooltip')
     tooltip.setAttribute('aria-hidden', 'true')
-    tooltip.hidden = true
     document.body.appendChild(tooltip)
 
     const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches
@@ -245,11 +244,11 @@
       activeTarget = null
       tooltip.classList.remove('is-visible')
       tooltip.setAttribute('aria-hidden', 'true')
-      tooltip.hidden = true
+      tooltip.style.visibility = ''
     }
 
     const positionTooltip = () => {
-      if (!activeTarget || tooltip.hidden) {
+      if (!activeTarget) {
         return
       }
 
@@ -288,7 +287,6 @@
 
       activeTarget = target
       tooltip.textContent = content
-      tooltip.hidden = false
       tooltip.setAttribute('aria-hidden', 'false')
       tooltip.classList.add('is-visible')
       positionTooltip()
@@ -369,7 +367,7 @@
     }, true)
 
     window.addEventListener('resize', () => {
-      if (activeTarget && !tooltip.hidden) {
+      if (activeTarget) {
         positionTooltip()
       }
     })
