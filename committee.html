@@ -17,7 +17,7 @@
     </script>
     <script src="./assets/vendor/sql/sql-wasm.js"></script>
     <script src="./assets/js/db/db.js?v=20260720-talk-77-cover"></script>
-    <script src="./assets/js/db/member.js?v=20260721-member-profiles-v8"></script>
+    <script src="./assets/js/db/member.js?v=20260811-academic-secretariat"></script>
 
     <meta charset="utf-8">
     <!-- 设置视口，使页面在不同设备上自适应屏幕宽度，初始缩放比例为1.0 -->
@@ -279,6 +279,10 @@
     };
 
     function getGroupTitle(members) {
+        if (members[0].displayGroupTitle) {
+            return members[0].displayGroupTitle;
+        }
+
         return members[0].role === "学术委员" && members[0].term === "首届 · 2021-2023"
             ? "创始学术委员"
             : members[0].role;
@@ -325,7 +329,21 @@
                 findFormerMembersByGroup()
             ]);
 
-            $("#committee-container").html(renderMemberGroups(currentMembers.map((members) => [members])));
+            const currentMemberGroups = [];
+            for (const members of currentMembers) {
+                currentMemberGroups.push([members]);
+
+                if (members[0].role === "学术委员") {
+                    const secretariat = findAcademicSecretariatMembers(members)
+                        .map((member) => ({ ...member, displayGroupTitle: "秘书处" }));
+
+                    if (secretariat.length) {
+                        currentMemberGroups.push([secretariat]);
+                    }
+                }
+            }
+
+            $("#committee-container").html(renderMemberGroups(currentMemberGroups));
             $("#committee-former-container").html(renderMemberGroups(formerMembers));
             window.dispatchEvent(new Event("mlnlp:committee-members-rendered"));
         } catch (error) {

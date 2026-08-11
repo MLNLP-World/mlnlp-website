@@ -14,6 +14,19 @@ const MEMBER_ORGANIZATION_OVERRIDES = {
     "许德容": "中国科学技术大学 & 香港城市大学"
 };
 
+const ACADEMIC_SECRETARIAT_NAMES = new Set([
+    "龚晨",
+    "司加胜",
+    "杨智勇",
+    "周杰"
+]);
+
+function findAcademicSecretariatMembers(members) {
+    return members
+        .filter((member) => member.role === "学术委员" && ACADEMIC_SECRETARIAT_NAMES.has(member.name))
+        .sort((a, b) => a.pinyin.localeCompare(b.pinyin, "en"));
+}
+
 async function findMembersByGroup() {
     const membersList = [];
 
